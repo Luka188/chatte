@@ -53,7 +53,6 @@ public class Server
             {
                 // create output
                 Soutput = new ObjectOutputStream(socket.getOutputStream());
-                Sender.Glist.add(Soutput);
                 Soutput.flush();
                 Sinput = new ObjectInputStream(socket.getInputStream());
             } catch (IOException e)

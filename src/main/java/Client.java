@@ -33,6 +33,8 @@ public class Client
             System.out.println("Exception creating new Input/output Streams: " + e);
             return;
         }
+        Thread b = new Thread(new Listener(Sinput));
+        b.start();
         // my connection is established
         // send the question (String) to the server
         boolean keep = true;
@@ -52,9 +54,6 @@ public class Client
             // read back the answer from the server
             try
             {
-
-                    String response = (String) Sinput.readObject();
-                    System.out.println("Read back from server: " + response);
             } catch (Exception e)
             {
 
