@@ -23,7 +23,7 @@ public class Listener implements Runnable
             {
                 e.printStackTrace();
             }
-            System.out.println("Read back from server: " + response);
+            System.out.println(response);
         }
     }
 }
