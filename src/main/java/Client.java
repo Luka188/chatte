@@ -60,6 +60,6 @@ public class Client {
     }
 
     public static void main(String[] arg) {
-        new Client("localhost", "Bibi");
+        new Client("54.37.224.170", "Dayblox");
     }
 }
