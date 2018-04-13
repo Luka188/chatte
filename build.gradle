@@ -7,7 +7,7 @@ repositories {
 }
 jar{
     manifest{
-        attributes 'Main-Class':'Server'
+        attributes 'Main-Class':'Client'
     }
 }
 dependencies {

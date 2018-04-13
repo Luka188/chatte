@@ -73,6 +73,16 @@ public class Server
                 } catch (IOException e)
                 {
                     System.err.println("Client left");
+                    try {
+                        Soutput.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    try {
+                        Sinput.close();
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
                     return;
                 }
                 // will surely not happen with a String
