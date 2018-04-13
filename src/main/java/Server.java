@@ -72,7 +72,7 @@ public class Server
                     Sender.SendALl(str);
                 } catch (IOException e)
                 {
-                    System.out.println("Exception reading/writing  Streams: " + e);
+                    System.err.println("Client left");
                     return;
                 }
                 // will surely not happen with a String
