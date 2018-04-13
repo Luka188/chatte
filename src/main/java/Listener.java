@@ -10,17 +10,20 @@ public class Listener implements Runnable
     }
     public void run()
     {
-        String response = null;
-        try
+        while(true)
         {
-            response = (String) is.readObject();
-        } catch (IOException e)
-        {
-            e.printStackTrace();
-        } catch (ClassNotFoundException e)
-        {
-            e.printStackTrace();
+            String response = null;
+            try
+            {
+                response = (String) is.readObject();
+            } catch (IOException e)
+            {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e)
+            {
+                e.printStackTrace();
+            }
+            System.out.println("Read back from server: " + response);
         }
-        System.out.println("Read back from server: " + response);
     }
 }
