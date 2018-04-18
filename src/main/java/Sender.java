@@ -1,16 +1,22 @@
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 
-public class Sender {
-    public static List<ObjectOutputStream> Glist = Collections.synchronizedList(new ArrayList<>());
+class Sender {
+    static Map<String, ObjectOutputStream> Glist = Collections.synchronizedMap(new HashMap<>());
 
-    public static void SendALl(String message) throws IOException {
-        for (ObjectOutputStream o : Glist) {
-            o.writeObject(message);
-            o.flush();
+    static void SendALl(String message, String pseudo, boolean server) throws IOException {
+        String msg;
+        if (server)
+            msg = message;
+        else
+            msg = pseudo + ": " + message;
+        for (String s : Glist.keySet()) {
+            if (!s.equals(pseudo)) {
+                ObjectOutputStream out = Glist.get(s);
+                out.writeObject(msg);
+                out.flush();
+            }
         }
     }
 }

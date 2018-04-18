@@ -28,9 +28,10 @@ class Server {
     }
 
     private class TcpThread extends Thread {
-        Socket socket;
-        ObjectInputStream Sinput;
-        ObjectOutputStream Soutput;
+        private String pseudo;
+        private Socket socket;
+        private ObjectInputStream Sinput;
+        private ObjectOutputStream Soutput;
 
         TcpThread(Socket socket) {
             this.socket = socket;
@@ -40,26 +41,35 @@ class Server {
             System.out.println("Thread trying to create Object Input/Output Streams");
             try {
                 Soutput = new ObjectOutputStream(socket.getOutputStream());
-                Sender.Glist.add(Soutput);
                 Soutput.flush();
                 Sinput = new ObjectInputStream(socket.getInputStream());
+                pseudo = String.valueOf(Sinput.readObject());
+                Sender.Glist.put(pseudo, Soutput);
+                Sender.SendALl(pseudo + " joined.", pseudo, true);
             } catch (IOException e) {
                 System.out.println("Exception creating new Input/output Streams: " + e);
                 return;
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
             }
             System.out.println("Thread waiting for a String from the Client");
             while (true) {
                 try {
-                    String str = (String) Sinput.readObject();
-                    Sender.SendALl(str);
+                    String message = String.valueOf(Sinput.readObject());
+                    Sender.SendALl(message, pseudo, false);
                 } catch (IOException e) {
-                    System.err.println("Client left");
-                    Sender.Glist.remove(Soutput);
+                    System.err.println(pseudo + " left");;
+                    try {
+                        Sender.SendALl(pseudo + " left.", pseudo, true);
+                    } catch (IOException e1) {
+                        e1.printStackTrace();
+                    }
+                    Sender.Glist.remove(pseudo);
                     try {
                         Soutput.close();
                         Sinput.close();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
+                    } catch (IOException e2) {
+                        e2.printStackTrace();
                     }
                     return;
                 }
