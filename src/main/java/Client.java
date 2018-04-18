@@ -32,6 +32,8 @@ class Client {
         Thread listen = new Thread(new Listener(Sinput));
         listen.start();
         while (true) {
+            if (!listen.isAlive())
+                return;
             String s = scan.nextLine();
             try {
                 Soutput.writeObject(s);

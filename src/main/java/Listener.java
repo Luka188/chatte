@@ -12,13 +12,15 @@ public class Listener implements Runnable {
         while (true) {
             String response = null;
             try {
-                response = (String) is.readObject();
+                response = String.valueOf(is.readObject());
             } catch (IOException e) {
                 e.printStackTrace();
             } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             System.out.println(response);
+            if (response.equals("Already taken."))
+                return;
         }
     }
 }

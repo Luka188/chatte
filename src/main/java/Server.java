@@ -44,9 +44,10 @@ class Server {
                 Soutput.flush();
                 Sinput = new ObjectInputStream(socket.getInputStream());
                 pseudo = String.valueOf(Sinput.readObject());
-                if (Sender.map.containsKey(pseudo))
+                if (Sender.map.containsKey(pseudo)) {
+                    Soutput.writeObject("Already taken.");
                     return;
-                else {
+                } else {
                     Sender.map.put(pseudo, Soutput);
                     Sender.list(pseudo);
                     Sender.SendAll(pseudo + " joined.", pseudo, true);
