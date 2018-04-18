@@ -1,43 +1,33 @@
-import java.io.*;
-import java.net.*;
-import java.util.*;
-public class Server
-{
-    // the socket used by the server
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.ServerSocket;
+import java.net.Socket;
+
+class Server {
     private ServerSocket serverSocket;
-    // server constructor
 
-    Server(int port) {
-
-        /* create socket server and wait for connection requests */
-        try
-        {
-            serverSocket = new ServerSocket(port);
+    Server() {
+        try {
+            serverSocket = new ServerSocket(2312);
             System.out.println("Server waiting for client on port " + serverSocket.getLocalPort());
-
-            while(true)
-            {
+            while (true) {
                 Socket socket = serverSocket.accept();  // accept connection
                 System.out.println("New client asked for a connection");
-                TcpThread t = new TcpThread(socket);	// make a thread of it
+                TcpThread thread = new TcpThread(socket);    // make a thread of it
                 System.out.println("Starting a thread for a new Client");
-                t.start();
+                thread.start();
             }
-        }
-        catch (IOException e) {
+        } catch (IOException e) {
             System.out.println("Exception on new ServerSocket: " + e);
         }
     }
 
-    //	you must "run" server to have the server run as a console application
     public static void main(String[] arg) {
-        // start server on port 1500
-        new Server(2312);
+        new Server();
     }
 
-    /** One instance of this thread will run for each client */
-    class TcpThread extends Thread {
-        // the socket where to listen/talk
+    private class TcpThread extends Thread {
         Socket socket;
         ObjectInputStream Sinput;
         ObjectOutputStream Soutput;
@@ -45,40 +35,28 @@ public class Server
         TcpThread(Socket socket) {
             this.socket = socket;
         }
-        public void run()
-        {
-            /* Creating both Data Stream */
+
+        public void run() {
             System.out.println("Thread trying to create Object Input/Output Streams");
-            try
-            {
-                // create output
+            try {
                 Soutput = new ObjectOutputStream(socket.getOutputStream());
                 Sender.Glist.add(Soutput);
                 Soutput.flush();
                 Sinput = new ObjectInputStream(socket.getInputStream());
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 System.out.println("Exception creating new Input/output Streams: " + e);
                 return;
             }
             System.out.println("Thread waiting for a String from the Client");
-            // read a String (which is an object)
-            boolean f = true;
-            while (f)
-            {
-                try
-                {
+            while (true) {
+                try {
                     String str = (String) Sinput.readObject();
                     Sender.SendALl(str);
-                } catch (IOException e)
-                {
+                } catch (IOException e) {
                     System.err.println("Client left");
+                    Sender.Glist.remove(Soutput);
                     try {
                         Soutput.close();
-                    } catch (IOException e1) {
-                        e1.printStackTrace();
-                    }
-                    try {
                         Sinput.close();
                     } catch (IOException e1) {
                         e1.printStackTrace();
@@ -86,8 +64,7 @@ public class Server
                     return;
                 }
                 // will surely not happen with a String
-                catch (ClassNotFoundException o)
-                {
+                catch (ClassNotFoundException o) {
                 }
             }
         }

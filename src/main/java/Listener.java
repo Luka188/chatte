@@ -1,26 +1,21 @@
 import java.io.IOException;
 import java.io.ObjectInputStream;
 
-public class Listener implements Runnable
-{
+public class Listener implements Runnable {
     ObjectInputStream is;
-    public Listener(ObjectInputStream op)
-    {
+
+    public Listener(ObjectInputStream op) {
         this.is = op;
     }
-    public void run()
-    {
-        while(true)
-        {
+
+    public void run() {
+        while (true) {
             String response = null;
-            try
-            {
+            try {
                 response = (String) is.readObject();
-            } catch (IOException e)
-            {
+            } catch (IOException e) {
                 e.printStackTrace();
-            } catch (ClassNotFoundException e)
-            {
+            } catch (ClassNotFoundException e) {
                 e.printStackTrace();
             }
             System.out.println(response);
