@@ -44,8 +44,13 @@ class Server {
                 Soutput.flush();
                 Sinput = new ObjectInputStream(socket.getInputStream());
                 pseudo = String.valueOf(Sinput.readObject());
-                Sender.Glist.put(pseudo, Soutput);
-                Sender.SendALl(pseudo + " joined.", pseudo, true);
+                if (Sender.map.containsKey(pseudo))
+                    return;
+                else {
+                    Sender.map.put(pseudo, Soutput);
+                    Sender.list(pseudo);
+                    Sender.SendAll(pseudo + " joined.", pseudo, true);
+                }
             } catch (IOException e) {
                 System.out.println("Exception creating new Input/output Streams: " + e);
                 return;
@@ -56,15 +61,15 @@ class Server {
             while (true) {
                 try {
                     String message = String.valueOf(Sinput.readObject());
-                    Sender.SendALl(message, pseudo, false);
+                    Sender.SendAll(message, pseudo, false);
                 } catch (IOException e) {
-                    System.err.println(pseudo + " left");;
+                    System.err.println(pseudo + " left");
                     try {
-                        Sender.SendALl(pseudo + " left.", pseudo, true);
+                        Sender.SendAll(pseudo + " left.", pseudo, true);
                     } catch (IOException e1) {
                         e1.printStackTrace();
                     }
-                    Sender.Glist.remove(pseudo);
+                    Sender.map.remove(pseudo);
                     try {
                         Soutput.close();
                         Sinput.close();
@@ -72,9 +77,7 @@ class Server {
                         e2.printStackTrace();
                     }
                     return;
-                }
-                // will surely not happen with a String
-                catch (ClassNotFoundException o) {
+                } catch (ClassNotFoundException o) {
                 }
             }
         }
