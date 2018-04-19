@@ -5,11 +5,9 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 class Server {
-    private ServerSocket serverSocket;
-
-    Server() {
+    private Server() {
         try {
-            serverSocket = new ServerSocket(2312);
+            ServerSocket serverSocket = new ServerSocket(2312);
             System.out.println("Server waiting for client on port " + serverSocket.getLocalPort());
             while (true) {
                 Socket socket = serverSocket.accept();  // accept connection
@@ -78,7 +76,7 @@ class Server {
                         e2.printStackTrace();
                     }
                     return;
-                } catch (ClassNotFoundException o) {
+                } catch (ClassNotFoundException ignored) {
                 }
             }
         }
